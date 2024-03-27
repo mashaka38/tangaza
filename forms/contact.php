@@ -3,7 +3,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $name = $_POST["name"];
     $email = $_POST["email"];
     $message = $_POST["message"];  
-    $subject = $_POST["subject"];
     // Hapa unaweza kufanya chochote na data uliopokea, kama vile kutuma barua pepe au kuokoa kwenye database.
     
     // Kwa mfano, unaweza kutuma barua pepe:
