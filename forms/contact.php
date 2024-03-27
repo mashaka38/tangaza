@@ -1,18 +1,38 @@
 <?php
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $name = $_POST["name"];
-    $email = $_POST["email"];
-    $message = $_POST["message"];  
-    // Hapa unaweza kufanya chochote na data uliopokea, kama vile kutuma barua pepe au kuokoa kwenye database.
-    
-    // Kwa mfano, unaweza kutuma barua pepe:
-    $to = "bluefaceshaibu@gmail.com";
-    $subject = "Ujumbe kutoka kwenye Fomu ya Tovuti";
-    $body = "Jina: $name\n\nBarua pepe: $email\n\nUjumbe:\n$message";
-    mail($to, $subject, $body);
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
-    // Unaweza kupeleka mtumiaji kwa ukurasa mwingine baada ya kumaliza usindikaji:
-    header("Location: contact.html");
-    exit;
+require 'vendor/autoload.php'; // Adjust this path according to your file structure
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $name = $_POST['name'];
+    $email = $_POST['email'];
+    $message = $_POST['message'];
+
+    $mail = new PHPMailer(true);
+    try {
+        //Server settings
+        $mail->isSMTP();
+        $mail->Host       = 'smtp.example.com'; // Set your SMTP server
+        $mail->SMTPAuth   = true;
+        $mail->Username   = 'your@example.com'; // SMTP username
+        $mail->Password   = 'your_password'; // SMTP password
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port       = 587; // Check your SMTP port
+
+        //Recipients
+        $mail->setFrom('from@example.com', 'Mailer');
+        $mail->addAddress('to@example.com', 'Receiver'); // Add a recipient
+
+        //Content
+        $mail->isHTML(true);
+        $mail->Subject = 'New Message from Contact Form';
+        $mail->Body    = 'Name: ' . $name . '<br>Email: ' . $email . '<br>Message: ' . $message;
+
+        $mail->send();
+        echo 'Message has been sent';
+    } catch (Exception $e) {
+        echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+    }
 }
 ?>
